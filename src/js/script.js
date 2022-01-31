@@ -15,13 +15,70 @@ var gameProps = {
 };
 
 var keys = {
-	'enter': 13,
-	'pause': 80,
-	'up': 38,
-	'down': 40,
-	'left': 37,
-	'right': 39
+	enter: 13,
+	left: 37,
+	right: 39,
+	pause: 80,
+	restart: 82
 };
+
+function startGame() {
+	stopTimeout();
+	setPlayStatus();
+	setContext();
+	listenKeyboard();
+	createSnake();
+	createMeat();	
+	cycle();
+}
+
+function stopTimeout() {
+	clearTimeout(gameProps.t);
+}
+
+function setPlayStatus() {
+	gameProps.state = states.playing;
+}
+
+function setContext() {
+	var canvas = document.getElementById('game');
+	gameProps.context = canvas.getContext('2d');
+}
+
+function listenKeyboard() {
+	document.addEventListener('keydown', keyboard);
+}
+
+function keyboard(key) {
+	if (key.keyCode == keys.pause) {
+		pauseGame();
+	}
+
+	if (key.keyCode == keys.restart) {
+		startGame();
+	}
+
+	if (gameProps.state === states.paused) return;
+
+	if (key.keyCode == keys.right) {
+		gameProps.snake.turnRight();
+	}
+
+	if (key.keyCode == keys.left) {
+		gameProps.snake.turnLeft();
+	}
+}
+
+function pauseGame() {
+	switch (gameProps.state) {
+		case states.playing: gameProps.state = states.paused; stopTimeout(); break;
+		case states.paused: gameProps.state = states.playing; cycle(); break;
+	}
+}
+
+function createSnake() {
+	gameProps.snake = new snake();
+}
 
 function snake() {
 	this.segments = [{
@@ -33,7 +90,7 @@ function snake() {
 
 	this.move = () => {
 		let i;
-		for (i = this.segments.length -1; i >= 0; i--) {
+		for (i = this.segments.length - 1; i >= 0; i--) {
 			if (i === 0) {
 				if (this.direction === 'top') {
 					this.segments[0].y -= 10;
@@ -77,7 +134,7 @@ function snake() {
 	}
 
 	this.growUp = () => {
-		var lastSegment = this.segments[this.segments.length -1];
+		var lastSegment = this.segments[this.segments.length - 1];
 		this.segments.push({
 			x: lastSegment.x,
 			y: lastSegment.y
@@ -85,53 +142,24 @@ function snake() {
 	}
 }
 
+function createMeat() {
+	gameProps.meat = new meat();
+}
+
 function meat() {
 	this.x = Math.floor(Math.random() * 50) * 10;
 	this.y = Math.floor(Math.random() * 50) * 10;
 }
 
-function startGame() {
-	setContext();
-	listeKeyboard();
-	createSnake();
-	createMeat();	
-	cycle();
-}
+function cycle() {
+	gameProps.context.clearRect(0, 0, 500, 500);
+	gameProps.snake.move();
 
-function setContext() {
-	var canvas = document.getElementById('game');
-	gameProps.context = canvas.getContext('2d');
-}
+	drawSnake();
+	drawMeat();
+	tryEat();
 
-function listeKeyboard() {
-	document.addEventListener('keydown', keyboard);
-}
-
-function keyboard(key) {
-	if (key.keyCode == keys.pause) {
-		pauseGame();
-	}
-
-	if (gameProps.state === states.paused) return;
-
-	if (key.keyCode == keys.right) {
-		gameProps.snake.turnRight();
-	}
-
-	if (key.keyCode == keys.left) {
-		gameProps.snake.turnLeft();
-	}
-}
-
-function pauseGame() {
-	switch(gameProps.state) {
-		case states.playing: gameProps.state = states.paused; clearTimeout(gameProps.t); break;
-		case states.paused: gameProps.state = states.playing; cycle(); break;
-	}
-}
-
-function createSnake() {
-	gameProps.snake = new snake();
+	gameProps.t = setTimeout(cycle, 100);
 }
 
 function drawSnake() {
@@ -149,10 +177,6 @@ function drawSquare(x = 0, y = 0, width = 10, height = 10, color = 'black') {
 	gameProps.context.fillRect(x, y, width, height);
 }
 
-function createMeat() {
-	gameProps.meat = new meat();
-}
-
 function drawMeat() {
 	drawSquare(gameProps.meat.x, gameProps.meat.y, 10, 10, 'red');
 }
@@ -164,16 +188,5 @@ function tryEat() {
 	}
 }
 
-function cycle() {
-	gameProps.context.clearRect(0, 0, 500, 500);
-
-	gameProps.snake.move();
-
-	drawSnake();
-	drawMeat();
-	tryEat();
-
-	gameProps.t = setTimeout(cycle, 100);
-}
 
 startGame();

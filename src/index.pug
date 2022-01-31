@@ -8,14 +8,18 @@ html(lang="es")
     link(rel="stylesheet", href="sass/main.scss")
   body
     .block
-      h1 Snake
+      h1.title Snake
       canvas#game(width="500px", height="500px")
-      p Keybord operations
-      p Pause (p), Move Right (&rarr;), Move Left (&larr;)
-      button(onClick="keyboard({ keyCode: 80 })") Pause
-      button(onClick="keyboard({ keyCode: 37 })") Left
-      button(onClick="keyboard({ keyCode: 39 })") Right
-      p Or use buttons
+      .buttons
+        button.button.button--primary(onClick="keyboard({ keyCode: 37 })") &larr; Left
+        button.button.button--primary(onClick="keyboard({ keyCode: 39 })") Right &rarr;
+      .buttons
+        button.button(onClick="keyboard({ keyCode: 80 })") Pause
+        button.button(onClick="keyboard({ keyCode: 82 })") Restart
+
+      p Keyboard operations
+      p Move Left (&larr;), Move Right (&rarr;)
+      p Pause (p), Restart (r)
     script(src="js/script.js")
         
 

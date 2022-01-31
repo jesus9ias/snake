@@ -1,11 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+$white: white;
+
+$blue_space: #1f364d;
+$blue_dark: #0e2439;
+
+$red_pink: #ff0048;
+$pink: #ff306a;
+
+$gray_light: #f2f2f2;
+
+$orange: #d66300;
+$red: red;
+$green: green;
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: $blue_space;
+  background: linear-gradient(to bottom, $blue_space, $blue_dark) fixed;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $white;
+  margin: 0px;
+}
+
+p {
+  font-size: 12px;
+}
+
+.title {
+  text-align: center;
+  margin: 0px;
+  padding: 10px;
+}
 
 canvas {
   display: block;
   margin: auto;
   width: 500px;
   aspect-ratio: 1/1;
-  border: 1px solid black;
+  background: $white;
   @media screen and (max-width: 500px) {
     width: 100%;
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.button {
+  display: inline-block;
+  background: $white;
+  color: $blue_space;
+  padding: 10px 30px;
+  font-size: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 0px;
+  &:hover {
+    cursor: pointer;
+    background: $gray_light;
+  }
+  &--primary {
+    background: $red_pink;
+    color: $white;
+    &:hover {
+      background: $pink;
+    }
   }
 }
