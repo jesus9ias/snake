@@ -1,0 +1,24 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "description": "snake game",
+  "scripts": {
+    "dev": "parcel src/index.pug --port 1236",
+    "build": "parcel build src/index.pug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesus9ias/snake.git"
+  },
+  "author": "Jesus Escamilla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jesus9ias/snake/issues"
+  },
+  "homepage": "https://github.com/jesus9ias/snake#readme",
+  "devDependencies": {
+    "@parcel/transformer-pug": "^2.2.1",
+    "@parcel/transformer-sass": "^2.2.1",
+    "parcel": "^2.2.1"
+  }
+}

@@ -1,0 +1,11 @@
+
+canvas {
+  display: block;
+  margin: auto;
+  width: 500px;
+  aspect-ratio: 1/1;
+  border: 1px solid black;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
+}

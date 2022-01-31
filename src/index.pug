@@ -1,0 +1,22 @@
+doctype html
+html(lang="es")
+  head
+    meta(http-equiv="X-UA-Compatible",content="IE=edge")
+    meta(name="viewport", content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0")
+    link(href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap", rel="stylesheet")
+    link(rel="preconnect", href="https://fonts.gstatic.com")
+    link(rel="stylesheet", href="sass/main.scss")
+  body
+    .block
+      h1 Snake
+      canvas#game(width="500px", height="500px")
+      p Keybord operations
+      p Pause (p), Move Right (&rarr;), Move Left (&larr;)
+      button(onClick="keyboard({ keyCode: 80 })") Pause
+      button(onClick="keyboard({ keyCode: 37 })") Left
+      button(onClick="keyboard({ keyCode: 39 })") Right
+      p Or use buttons
+    script(src="js/script.js")
+        
+
+      
