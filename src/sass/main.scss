@@ -85,6 +85,11 @@ canvas {
   display: flex;
   font-weight: bold;
   justify-content: space-between;
+  width: 500px;
+  margin: auto;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
   #state {
     text-transform: capitalize;
   }
