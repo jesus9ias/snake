@@ -5,13 +5,19 @@ var states = {
 };
 
 var gameProps = {
-	context: '',
-	snake: null,
-	meat: null,
 	t: null,
+	context: '',
+	meat: null,
+	snake: null,
 	time: 0,
+	points: 0,
+	startTime: 0,
+	elapsedTime: 0,
 	state: states.playing,
-	points: 0
+	timeLabel: document.getElementById('time'),
+	stateLabel: document.getElementById('state'),
+	pauseButton: document.getElementById('pause'),
+	pointsLabel: document.getElementById('points')
 };
 
 var keys = {
@@ -23,6 +29,8 @@ var keys = {
 };
 
 function startGame() {
+	setStartTime();
+	resetPoints();
 	stopTimeout();
 	setPlayStatus();
 	setContext();
@@ -32,12 +40,26 @@ function startGame() {
 	cycle();
 }
 
+function setStartTime() {
+	gameProps.startTime = Date.now();
+}
+
+function resetPoints() {
+	gameProps.points = 0;
+	gameProps.pointsLabel.innerHTML = 0;
+}
+
 function stopTimeout() {
 	clearTimeout(gameProps.t);
 }
 
 function setPlayStatus() {
-	gameProps.state = states.playing;
+	setState(states.playing);
+}
+
+function setState(state) {
+	gameProps.stateLabel.innerHTML = state;
+	gameProps.state = state;
 }
 
 function setContext() {
@@ -51,14 +73,14 @@ function listenKeyboard() {
 
 function keyboard(key) {
 	if (key.keyCode == keys.pause) {
-		pauseGame();
+		pauseOrContinueGame();
 	}
 
 	if (key.keyCode == keys.restart) {
 		startGame();
 	}
 
-	if (gameProps.state === states.paused) return;
+	if ([states.paused, states.ended].indexOf(gameProps.state) > -1) return;
 
 	if (key.keyCode == keys.right) {
 		gameProps.snake.turnRight();
@@ -69,11 +91,31 @@ function keyboard(key) {
 	}
 }
 
-function pauseGame() {
+function pauseOrContinueGame() {
 	switch (gameProps.state) {
-		case states.playing: gameProps.state = states.paused; stopTimeout(); break;
-		case states.paused: gameProps.state = states.playing; cycle(); break;
+		case states.playing: setState(states.paused);
+			printPauseStateText('Continue');
+			stopTimeout();
+			break;
+		case states.paused: setState(states.playing);
+			printPauseStateText('Pause');
+			fixTime();
+			cycle();
+			break;
 	}
+}
+
+function printPauseStateText(text) {
+	gameProps.pauseButton.innerHTML = text;
+}
+
+function fixTime() {
+	gameProps.startTime = Date.now() - gameProps.elapsedTime;
+}
+
+function endGame() {
+	stopTimeout();
+	setState(states.ended);
 }
 
 function createSnake() {
@@ -103,6 +145,23 @@ function snake() {
 				}
 				if (this.direction === 'left') {
 					this.segments[0].x -= 10;
+				}
+				if (this.segments[0].x < 0) {
+					this.segments[0].x = 490;
+				}
+				if (this.segments[0].x >= 500) {
+					this.segments[0].x = 0;
+				}
+				if (this.segments[0].y < 0) {
+					this.segments[0].y = 490;
+				}
+				if (this.segments[0].y >= 500) {
+					this.segments[0].y = 0;
+				}
+				if (this.segments
+					.filter((segment) => segment.x === this.segments[0].x
+						&& segment.y === this.segments[0].y).length > 1) {
+					endGame();
 				}
 			} else {
 				this.segments[i].x = this.segments[i - 1].x;
@@ -155,11 +214,19 @@ function cycle() {
 	gameProps.context.clearRect(0, 0, 500, 500);
 	gameProps.snake.move();
 
+	printTime();
 	drawSnake();
 	drawMeat();
 	tryEat();
 
-	gameProps.t = setTimeout(cycle, 100);
+	if (gameProps.state === states.playing) {
+		gameProps.t = setTimeout(cycle, 100);
+	}
+}
+
+function printTime() {
+	gameProps.elapsedTime = Date.now() - gameProps.startTime;
+	gameProps.timeLabel.innerHTML = gameProps.elapsedTime;
 }
 
 function drawSnake() {
@@ -185,7 +252,13 @@ function tryEat() {
 	if (gameProps.snake.tryEat(gameProps.meat)) {
 		createMeat();
 		gameProps.snake.growUp();
+		addPoints();
 	}
+}
+
+function addPoints() {
+	gameProps.points += 10;
+	gameProps.pointsLabel.innerHTML = gameProps.points;
 }
 
 

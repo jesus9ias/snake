@@ -9,12 +9,22 @@ html(lang="es")
   body
     .block
       h1.title Snake
+      .board
+        p#state Playing
+        p
+          span#time 0
+          .
+            &nbsp;MS
+        p
+          span#points 0
+          .
+            &nbsp;Points
       canvas#game(width="500px", height="500px")
       .buttons
         button.button.button--primary(onClick="keyboard({ keyCode: 37 })") &larr; Left
         button.button.button--primary(onClick="keyboard({ keyCode: 39 })") Right &rarr;
       .buttons
-        button.button(onClick="keyboard({ keyCode: 80 })") Pause
+        button.button#pause(onClick="keyboard({ keyCode: 80 })") Pause
         button.button(onClick="keyboard({ keyCode: 82 })") Restart
 
       p Keyboard operations
